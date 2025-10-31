@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Client Mobile App - Expo Development Server
+  mobile-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: credit-jambo-mobile-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      EXPO_PUBLIC_API_BASE_URL: ${EXPO_PUBLIC_API_BASE_URL:-http://localhost:4000/api}
+      EXPO_USE_METRO_DEV_SERVER: "true"
+    ports:
+      - "8081:8081"  # Expo DevTools
+      - "19000:19000"  # Metro bundler
+      - "19001:19001"  # Metro bundler alternative
+      - "19002:19002"  # Expo Web
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.expo
+    networks:
+      - credit-jambo-network
+    stdin_open: true
+    tty: true
+
+networks:
+  credit-jambo-network:
+    driver: bridge
+
